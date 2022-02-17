@@ -18,9 +18,6 @@ class App extends Component{
   
 }
 
-
-
-
   formSubmitHandler = ({ name, number }) => {
     const nameToLowerCase = name.toLowerCase();
     const filterName = this.state.contacts.find(contact =>
@@ -35,6 +32,8 @@ class App extends Component{
       contacts: [{name, number, id: nanoid()}, ...contacts],
     }))
   }
+
+
   
   deleteContact = contactId => {
     this.setState(prevState => ({
@@ -43,11 +42,13 @@ class App extends Component{
   };
   
 
+ 
 
   filterChange = e => {
     const { name, value } = e.currentTarget;
     this.setState({ [name]: value })
   };
+
 
   getExsistContacts = () => {
     const { filter, contacts } = this.state;
@@ -55,7 +56,23 @@ class App extends Component{
     return contacts.filter(contact => contact.name.toLowerCase().includes(generalFilter),
     )}
 
- 
+
+    componentDidMount () {
+      const contacts = localStorage.getItem('contacts');
+      const parsedContacts = JSON.parse(contacts);
+      
+  if(parsedContacts){
+ this.setState({ contacts: parsedContacts })
+  };
+       
+    }
+  
+
+    componentDidUpdate(prevProps, prevState) {
+      if (this.state.contacts !== prevState.contacts){
+        localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
+      }
+    }
   
 
   render(){
